@@ -1,0 +1,20 @@
+﻿# Entorno virtual
+.venv/
+
+# Archivos temporales
+__pycache__/
+*.py[cod]
+
+# Configuración local y secretos
+.env
+.env.*
+
+# Caché de Gradio
+.gradio/
+
+# Base vectorial generada localmente
+datos/vectores/
+chroma_db*/
+
+# Copia anterior
+rag 1.py
