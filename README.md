@@ -6,10 +6,18 @@ Fecha: 12/11/2026
 
 ## 1. Descripción del proyecto
 
+Consultas relacionadas con celiaquía.
+
+Originalmente el objetivo fue:
+
 Esta aplicación permite buscar una ubicación por ejemplo "centro de atención de salud", luego localizar establecimientos gastronómicos cercanos, tomando como referencia una distancia aproximada de tres cuadras (300 metros) permitiendo identificar información sobre el tipo de comida que ofrecen los establecimientos y buscar referencias a opciones de alimentación sin TACC.
 
+Por falta de documentacion oficial pública disponible de cada establecimiento se modificó el objetivo.
 ## 2. Objetivos
+- Consultar información relacionada con celiaquia en Argentina
 
+
+## 2. Objetivos desistidos
 - Buscar una ubicacion
 - Identificar establecimientos gastronómicos cercanos.
 - Consultar el tipo de comida ofrecida.
@@ -18,7 +26,7 @@ Esta aplicación permite buscar una ubicación por ejemplo "centro de atención 
 
 ## 3. Tecnologías utilizadas
 
-- Google Maps
+
 - Visual Studio Code
 - Python 3.12
 - uv 
@@ -35,7 +43,7 @@ Esta aplicación permite buscar una ubicación por ejemplo "centro de atención 
 
 La aplicación tendrá dos funcionalidades principales:
 
-**A. Búsqueda de ubicación**
+**A. Búsqueda de ubicación** Desistido
 
 1. El usuario ingresa una ubicación ejemplo "centro de atención de salud".
 2. Identifica su ubicación.
