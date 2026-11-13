@@ -1,3 +1,7 @@
+Autor: Casco Monica
+Fecha: 12/11/2026
+
+
 # Buscador de lugares de atención de salud y alimentación sin TACC
 
 ## 1. Descripción del proyecto
