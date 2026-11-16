@@ -1,70 +1,81 @@
 Autor: Casco Monica
 Fecha: 12/11/2026
+Actualización: 16/11/2026
 
-
-# Buscador de lugares de atención de salud y alimentación sin TACC
+# Buscador de información sobre celiaquía y alimentación sin TACC
 
 ## 1. Descripción del proyecto
 
-Consultas relacionadas con celiaquía.
+Este proyecto desarrolla una aplicación para consultar información sobre celiaquía, alimentación sin TACC y recomendaciones relacionadas con la seguridad alimentaria. La solución combina recuperación documental con un modelo de lenguaje para responder preguntas basadas en evidencia, mostrando además las fuentes consultadas para cada respuesta.
 
-Originalmente el objetivo fue:
+La aplicación trabaja con documentos PDF, los divide en fragmentos, los transforma en embeddings, los almacena en una base vectorial y recupera los textos más relevantes para la consulta del usuario. Luego utiliza un modelo generativo para construir una respuesta apoyada en el contexto recuperado.
 
-Esta aplicación permite buscar una ubicación por ejemplo "centro de atención de salud", luego localizar establecimientos gastronómicos cercanos, tomando como referencia una distancia aproximada de tres cuadras (300 metros) permitiendo identificar información sobre el tipo de comida que ofrecen los establecimientos y buscar referencias a opciones de alimentación sin TACC.
+## 2. Objetivo general
 
-Por falta de documentacion oficial pública disponible de cada establecimiento se modificó el objetivo.
-## 2. Objetivos
-- Consultar información relacionada con celiaquia en Argentina
+Diseñar y evaluar un sistema de búsqueda semántica para responder preguntas sobre alimentos sin TACC, con especial atención a la trazabilidad de la evidencia y a la prevención de respuestas inventadas o interpretaciones incorrectas.
 
+## 3. Objetivos específicos
 
-## 2. Objetivos desistidos
-- Buscar una ubicacion
-- Identificar establecimientos gastronómicos cercanos.
-- Consultar el tipo de comida ofrecida.
-- Detectar referencias a opciones sin TACC.
-- Mostrar las fuentes utilizadas para responder las consultas.
+- Buscar información relevante sobre celiaquía y alimentación sin TACC.
+- Recuperar fragmentos útiles de documentos oficiales.
+- Generar respuestas apoyadas en evidencia documental.
+- Mostrar las fuentes utilizadas para cada respuesta.
+- Evitar afirmaciones no respaldadas por el corpus.
+- Promover una lectura crítica de las respuestas del sistema.
 
-## 3. Tecnologías utilizadas
+## 4. Tecnologías utilizadas
 
-
-- Visual Studio Code
 - Python 3.12
-- uv 
-- Gradio 
-- OpenStreetMap para la búsqueda de lugares.
-- LangChain 
-- ChromaDB 
-- Ollama 
+- Gradio
+- LangChain
+- ChromaDB
+- Ollama
+- PyPDF
 - bge-m3
-- granite4
+- granite4:latest
+- Visual Studio Code
 
+## 5. Método de trabajo
 
-## 4. Funcionamiento general
+El sistema sigue un flujo de trabajo basado en RAG (Retrieval-Augmented Generation):
 
-La aplicación tendrá dos funcionalidades principales:
+1. Se cargan los documentos PDF desde la carpeta `datos/documentos`.
+2. El texto se extrae página por página.
+3. Los documentos se dividen en fragmentos.
+4. Se generan embeddings con el modelo `bge-m3`.
+5. Los fragmentos y vectores se almacenan en Chroma.
+6. El usuario realiza una pregunta.
+7. El sistema recupera los fragmentos más relevantes.
+8. El modelo genera una respuesta con base en ese contexto.
+9. Se muestran los fragmentos usados como evidencia.
 
-**A. Búsqueda de ubicación** Desistido
+## 6. Estructura del proyecto
 
-1. El usuario ingresa una ubicación ejemplo "centro de atención de salud".
-2. Identifica su ubicación.
-3. Busca establecimientos gastronómicos en un radio aproximado de 300 metros.
-4. Presenta los resultados y la información disponible sobre sus opciones gastronómicas.
+```text
+Buscador_salud_sin_tacc/
+├── .venv/
+├── datos/
+│   ├── documentos/
+│   └── vectores/
+│       └── chroma_db_sin_tacc/
+├── rag.py
+├── rag 1.py
+├── requirements.txt
+├── README.md
+├── .gitignore
+└── .gradio/
+```
 
-**B. Consulta de información sin TACC**
+## 7. Instalación
 
-1. Se cargan documentos PDF sobre celiaquía y alimentación sin TACC, la sección mas compleja determinar legitimidad de origen.
-2. Los documentos se dividen en fragmentos de texto.
-3. Se generan embeddings y se almacenan en ChromaDB.
-4. El usuario realiza una pregunta.
-5. El sistema recupera los fragmentos relacionados.
-6. Un modelo de lenguaje genera una respuesta utilizando la información recuperada.
-7. Se muestran las fuentes y los fragmentos utilizados.
+Clonar el repositorio e ingresar al directorio del proyecto:
 
-## 5. Instalación
+```bash
+git clone <URL-del-repositorio>
+cd Buscador_salud_sin_tacc
+```
 
-Clonar o descargar el proyecto y abrir la carpeta en Visual Studio Code.
-
-Crear el entorno virtual y activarlo
+Crear y activar el entorno virtual:
 
 ```powershell
 uv venv --python 3.12
@@ -76,83 +87,76 @@ Instalar las dependencias:
 uv pip install -r requirements.txt
 ```
 
-## 6. Ejecución
-
-La aplicación se ejecutará desde la terminal de Visual Studio Code mediante:
+Alternativa con `pip`:
 
 ```powershell
-python app.py
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-Aqui te escribira en la terminal
+## 8. Ejecución
 
-Fragmentos disponibles: 237
-* Running on local URL: aqui de escribe donde puedes visualizar para escribir tu consulta para mi caso era http://127.0.0.1*******
+Para levantar la interfaz de consulta:
 
+```powershell
+python rag.py
+```
 
-## 7. Consideraciones
-
-La información sobre establecimientos gastronómicos depende de los datos disponibles en las fuentes consultadas.
-
-CRUCIAL
-La presencia de referencias a opciones sin TACC no garantiza que un establecimiento sea apto para personas con celiaquía. Se recomienda verificar directamente con el local sus procedimientos y condiciones de elaboración.
-
-Las respuestas del sistema RAG deben mostrar las fuentes documentales utilizadas y no reemplazan el asesoramiento profesional.
-
-Corpus identificación de los archivos con alias.
-Documentación Oficial respaldatoria Argentinca
-https://www.anmat.gob.ar/Enfermedad_Celiaca/Guia_BPM_ALG_gastronomicos_2017.pdf?utm_source=chatgpt.com
-https://www.argentina.gob.ar/sites/default/files/celiaquia_-_guia_rapida_para_consumidores.pdf?utm_source=chatgpt.com
-
-## 8. Estructura proyecto - Preparacion de la carpeta
+La aplicación levantará una interfaz web local con una URL similar a:
 
 ```text
-Buscador_salud_sin_tacc/
-│
-├── .venv/
-├── datos/
-│   ├── documentos/
-│   └── vectores/
-│
-├── app.py
-├── rag.py
-├── buscador.py
-├── requirements.txt
-└── README.md
+http://127.0.0.1:7860/
 ```
-** dividida en 3 app para utilizar de forma independiente**
 
+## 9. Uso de la aplicación
 
+1. Abrir la URL mostrada por Gradio.
+2. Escribir una pregunta relacionada con celiaquía o alimentación sin TACC.
+3. El sistema recupera fragmentos relevantes del índice vectorial.
+4. El modelo responde utilizando ese contexto.
+5. La interfaz muestra la respuesta y las fuentes documentales empleadas.
 
+Ejemplos de consultas:
 
-# Resumen Qué hace
+- ¿Qué recomendaciones existen para evitar la contaminación cruzada?
+- ¿Qué alimentos se mencionan para personas con celiaquía?
+- ¿Qué información hay sobre alimentación sin TACC?
 
+## 10. Consideraciones importantes
 
-El sistema trabaja con dos documentos PDF oficiales. 
-Primero extrae el texto de los PDF, luego lo divide en fragmentos y utiliza el modelo BGE-M3 para convertirlos en vectores numéricos.
+- La información se basa únicamente en los documentos cargados en el sistema.
+- La presencia de una referencia a opciones sin TACC no garantiza que un local sea apto para personas con celiaquía.
+- El sistema no reemplaza el criterio profesional ni la verificación directa con establecimientos.
+- Las respuestas deben interpretarse como síntesis documental, no como diagnóstico ni validación.
 
-Estos vectores se almacenan en Chroma (Aclaración traida de la clase Chroma se usa para buscar)
+## 11. Criterio de evaluación
 
-Posteriormente, los fragmentos recuperados se envían a Granite 4, genera una respuesta utilizando el contexto disponible.
+El proyecto busca analizar la calidad de un sistema RAG en un caso real de salud alimentaria, evaluando:
 
-Finalmente, mediante Gradio desarrollé una interfaz web donde permite realizar una consulta y obtener una respuesta como los documentos y páginas utilizados como evidencia.
+- calidad de la recuperación semántica;
+- precisión y trazabilidad de las respuestas;
+- capacidad de abstenerse cuando no hay evidencia suficiente;
+- prevención de alucinaciones o interpretaciones excesivas;
+- claridad de las referencias utilizadas.
 
-Durante las pruebas comprobé que el sistema puede recuperar información, responder consultas y abstenerse cuando no encuentra datos suficientes. También identifiqué que un modelo de lenguaje puede interpretar incorrectamente la evidencia, por lo que es necesario validar sus respuestas.
-Por esta razón de modifica el texto incluido en el código def crear_cadena_rag():. Utilizando además de los sugeridos por el cuaderno base 7 otro como ser "No conviertas una posibilidad en certeza, una recomendación " Porque las respuestas incluia por ejemplo la palabra "garantiza", la cual no está contenida en los documentos originales.
+## 12. Limitaciones
 
-Notas
-## Transferencia al Trabajo Integrador 2
+- Es necesario validar la respuesta del modelo frente al contenido original del documento.
+- Consultas muy amplias o ambiguas pueden devolver fragmentos incompletos.
+- La interpretación del lenguaje puede requerir control y validación manual.
+- Para una versión más robusta, el corpus debería ampliarse con más documentos oficiales y verificables.
 
-Este laboratorio trabaja un único documento que no se publica como corpus del proyecto. Para el integrador vas a necesitar al menos tres documentos reales y compartibles. Conservá esta tabla como punto de partida.
+## 13. Referencias documentales
 
-| Documento propio | Pregunta respondible | Página o sección esperada | ¿Qué recuperó? | ¿Qué interpretó el modelo? | Límite observado |
-|---|---|---|---|---|---|
-| Que es la celiaquia | La celiaquia es una enfermedad sistémica autoinmune producida por la intolerancia permanente al gluten en individuos genéticamente predispuestos. Esta intolerancia puede presentarse en cualquier momento de la vida desde la lactancia hasta la adultez avanzada. Dado que afecta la mucosa del intestino, puede conducir a una malabsorción de nutrientes esenciales. En Argentina, se ha estimado que 1/167 personas adultas son celíacas y 1/79 individuos en otros estudios. [1][2] | La celiaquía es la inflamación del intestino provocada por intolerancia al gluten.              
-Las personas afectadas deben evitar cereales con gluten y sus derivados. | Correctamente la solicitud | Completá | Completá |
-| Que presupuesto tengo en casa | Organizar el dinero del hogar es dividir tus ingresos netos mensuales (lo que entra limpio a la casa)  | NA | Lo inventó | Requerir escriba no posee respuesta | Completá |
-| Completá | Utilizar papel descartable y una solución de alcohol etílico para limpiar la vajilla. [1] [2] | Utilizar papel descartable y una solución de alcohol etílico para limpiar la vajilla. Garantiza evitar la contaminación cruzada | Inventó | No debe convertir una recomentadion en certeza | Completá |
+El proyecto se apoya en información documental que debe ser verificada y citada con cuidado. Se recomienda trabajar con fuentes oficiales y confiables, por ejemplo:
 
-## Glosario
+- ANMAT
+- Guías nacionales sobre celiaquía
+- Documentación pública sanitaria y alimentaria
+- Normativas y recomendaciones del ámbito argentino
+
+## 14. Glosario
 
 | Término | Qué significa en este laboratorio |
 |---|---|
@@ -166,32 +170,10 @@ Las personas afectadas deben evitar cereales con gluten y sus derivados. | Corre
 | **Abstención** | Reconocimiento de que el contexto no alcanza para responder. |
 | **Trazabilidad** | Posibilidad de volver desde una respuesta hasta el fragmento y la página original. |
 
+## 15. Resumen ejecutivo
 
-Chroma
-La celda anterior no decide cuál fragmento es mejor: sólo comprueba que la pregunta y ambos textos se representan con el mismo modelo. Ahora construimos dos índices temporales en memoria para comparar la evidencia recuperada. La distancia menor indica mayor cercanía según esta colección; no es una probabilidad de verdad.
+Este proyecto implementa un buscador textual basado en RAG para responder preguntas sobre celiaquía y alimentos sin TACC. El sistema recupera fragmentos relevantes desde documentos PDF, los representa con embeddings y genera respuestas apoyadas en contexto. La clave del trabajo es la trazabilidad: cada respuesta debe estar vinculada a la evidencia documental y evitar inferencias no respaldadas.
 
-indice_breve = Chroma.from_documents(
-    documents=fragmentos_breves,
-    embedding=embeddings,
-    collection_name="laboratorio_comparacion_breve",
-)
-indice_amplio = Chroma.from_documents(
-    documents=fragmentos_amplios,
-    embedding=embeddings,
-    collection_name="laboratorio_comparacion_amplio",
-)
+## 16. Licencia
 
-hallazgo_breve = indice_breve.similarity_search_with_score(
-    query=pregunta_de_comparacion,
-    k=1,
-)[0]
-hallazgo_amplio = indice_amplio.similarity_search_with_score(
-    query=pregunta_de_comparacion,
-    k=1,
-)[0]
-
-for nombre, hallazgo in [("Breve", hallazgo_breve), ("Amplio", hallazgo_amplio)]:
-    documento, distancia = hallazgo
-    print(f"\n{nombre} — página {documento.metadata['page'] + 1}")
-    print("Distancia:", round(distancia, 3))
-    print(documento.page_content)
+Este proyecto se entrega como trabajo práctico académico. Se recomienda revisar la licencia del repositorio y de los documentos fuente antes de reutilizarlo en contextos profesionales o públicos.
